@@ -8,7 +8,7 @@ let radius = 500;
 let cam
 
 let targetIndex = 0
-let targets
+let targets = [] //A list of vectors where camera is heading
 
 function setup() {
   createCanvas(windowWidth, windowHeight, WEBGL);
@@ -18,12 +18,16 @@ function setup() {
     trees.push(new Tree( x, 0, z))
   }
 
-  targets = [
-    createVector(0, 0, 0),
-    createVector(400, 0, 0),
-    createVector(400, 0, 800),
-    createVector(0, 0, 800),
-  ]
+  //CahtGPT generated code to create ziggsagg pattern
+  let step = 200;
+  let length = 800;
+  let numZigzags = 6;
+
+  for (let i = 0; i <= numZigzags; i++) {
+    let x = (i % 2 === 0) ? 0 : step;
+    let z = (i * (length / numZigzags));
+    targets.push(createVector(x, 0, z));
+  }
 
   cam = new Camera()
   cam.setTarget(targets[targetIndex], 4, 0)
