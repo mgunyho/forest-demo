@@ -14,11 +14,7 @@ let deltaTime = 0
 
 let introFont
 
-<<<<<<< HEAD
-const treeSpawnAmount = 10
-=======
 const treeSpawnAmount = 80
->>>>>>> 7fffaf8da04a9685e43e5280b999fbbb3467ff21
 
 function setup() {
   createCanvas(windowWidth, windowHeight, WEBGL);
@@ -53,15 +49,9 @@ function draw() {
    cam.linearAdvance(demoTime, yOffset)
 
   //Every time the camera meets target, move target and spawn trees
-<<<<<<< HEAD
-  if ( cam.atTarget ) {
-    if (  demoTime > 24 ) {
-      timeToNextTarget = 3
-=======
   if ( cam.atTarget && !endTarget ) {
     if (  demoTime > 16 ) {
       timeToNextTarget = 2
->>>>>>> 7fffaf8da04a9685e43e5280b999fbbb3467ff21
     }
     if ( demoTime > 52 ) {
       timeToNextTarget = 32
@@ -80,13 +70,8 @@ function draw() {
 
   const defFov = 2 * Math.atan(height / 2 / 800)
   perspective(1, width/height, 10)
-<<<<<<< HEAD
-  //Wonky perspective effect at 32 beats
-  if (demoTime > 32) {
-=======
   //wonky perspective effect at 32 beats
   if (demoTime > 32 && demoTime < 52 ) {
->>>>>>> 7fffaf8da04a9685e43e5280b999fbbb3467ff21
     sinTime = demoTime - 32
     let pers = 0.9 * (Math.sin((sinTime - 1)/1.3)) + 1.6
     //perspective(4*(Math.sin(sinTime + 1)/10) + 2.3, width/height, 10)
