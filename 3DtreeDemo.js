@@ -12,7 +12,7 @@ let deltaTime = 0
 
 let introFont
 
-const treeSpawnAmount = 30
+const treeSpawnAmount = 10
 
 function setup() {
   createCanvas(windowWidth, windowHeight, WEBGL);
@@ -38,6 +38,7 @@ function draw() {
   const bpm = 138
   const demoTime = getTime() * bpm / 60 + 0.25
 
+  //Walking
   let yOffset = 0
   if (demoTime > 8 && demoTime < 32) {
     yOffset = sin(demoTime*2) * -30
@@ -47,8 +48,8 @@ function draw() {
 
   //Every time the camera meets target, move target and spawn trees
   if ( cam.atTarget ) {
-    if (  demoTime > 16 ) {
-      timeToNextTarget = 2
+    if (  demoTime > 24 ) {
+      timeToNextTarget = 3
     }
 
     moveCameraTarget()
@@ -59,16 +60,23 @@ function draw() {
   //Add lead dissort after 16 beats
   let dissort = 0
   if (demoTime > 16) {
-    
     dissort = (demoTime + 0.2) % 2 / 2
   }
 
   const defFov = 2 * Math.atan(height / 2 / 800)
   perspective(1, width/height, 10)
-  //wonky perspective effect at 32 beats
+  //Wonky perspective effect at 32 beats
   if (demoTime > 32) {
     sinTime = demoTime - 32
-    perspective(3*(Math.sin(sinTime)/10) + 2, width/height, 10)
+    let pers = 0.9 * (Math.sin((sinTime - 1)/1.3)) + 1.6
+    //perspective(4*(Math.sin(sinTime + 1)/10) + 2.3, width/height, 10)
+    perspective(pers, width/height, 10)
+
+    
+    if (pers > 3) {
+      console.log("perspective number: " + pers)
+    }
+
   }
 
   //Draw stuff
