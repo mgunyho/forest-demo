@@ -1,6 +1,7 @@
 audioPlayer = document.querySelector('#song')
 
 let trees = []
+let groundBlobs = []
 
 let speed = 2;
 let angle = 0;
@@ -15,6 +16,7 @@ function setup() {
   createCanvas(windowWidth, windowHeight, WEBGL);
 
   trees = [ ...spawnTrees(targetZ), ...spawnTrees(targetZ - 800) ]
+  blobs = [ ...spawnBlobs(targetZ), ...spawnBlobs(targetZ - 800) ]
 
   cam = new Camera()
   cam.setTarget( createVector(0, 0, targetZ), 8, 0)
@@ -52,11 +54,15 @@ function draw() {
 
     cam.setTarget(newTarget, lastTargetTime + timeToNextTarget, lastTargetTime)
 
-    //procedurally add trees
+    //procedurally add trees and blobs
     trees = [ ...trees, ...spawnTrees(targetZ-800)]
+    blobs = [ ...blobs, ...spawnBlobs(targetZ-800)]
+
 
     //Prune trees that are behind camera Z
-    trees = trees.filter( tree => tree.z - 50 <   cam.location.z )
+    trees = trees.filter( tree => tree.z - 50 < cam.location.z )
+    blobs = blobs.filter( blobs => blobs.z - 50 < cam.location.z )
+
   }
   
 
@@ -65,6 +71,9 @@ function draw() {
 
   for (const tree of trees) {
     tree.draw( dissort )
+  }
+  for (const blob of blobs) {
+    blob.draw()
   }
 }
 
@@ -76,4 +85,14 @@ function spawnTrees( z_origin ) {
     trees.push(new Tree( x, 0, z))
   }
   return trees
+}
+
+function spawnBlobs( z_origin ) {
+  let blobs = []
+  for (let i = 0; i < treeSpawnAmount; i++) {
+    let x = random(-2000, 2000);
+    let z = z_origin - random(0, 1600);
+    blobs.push(new GroundBlob( x, 0, z))
+  }
+  return blobs
 }
