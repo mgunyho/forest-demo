@@ -2,13 +2,10 @@ audioPlayer = document.querySelector('#song')
 
 let trees = []
 let groundBlobs = []
-
-let speed = 2;
-let angle = 0;
-let radius = 500;
 let cam
 
 let targetZ = 0
+let timeToNextTarget = 4
 
 const treeSpawnAmount = 30
 
@@ -21,6 +18,7 @@ function setup() {
   cam = new Camera()
   cam.setTarget( createVector(0, 0, targetZ), 8, 0)
 
+  noStroke();
   noLoop()
 }
 
@@ -28,46 +26,26 @@ function draw() {
   const bpm = 138
   const demoTime = getTime() * bpm / 60 + 0.25
 
-  background(20, 20, 40); // Sky blue
-  noStroke();
-  
-  // Ground
-  push();
-  fill(34, 139, 34); // Forest green
-  translate(0, 100, targetZ);
-  rotateX(HALF_PI);
-  plane(4000, 10000);
-  pop();
-
   cam.linearAdvance(demoTime)
 
   //Every time the camera meets target, move target and spawn trees
   if ( cam.atTarget ) {
-    const lastTargetTime = cam.targetTime
-    
-    const x = ( 0.5 - Math.random() ) * 1000 
-    targetZ = targetZ - 800
-    const newTarget = createVector( x, 0, cam.target.z - 800 )
+    if (  demoTime > 16 ) {
+      timeToNextTarget = 2
+    }
 
-    // 4 beats to next target untill 16 beats, 2 after that
-    const timeToNextTarget = demoTime > 16 ? 2 : 4;
-
-    cam.setTarget(newTarget, lastTargetTime + timeToNextTarget, lastTargetTime)
-
-    //procedurally add trees and blobs
-    trees = [ ...trees, ...spawnTrees(targetZ-800)]
-    blobs = [ ...blobs, ...spawnBlobs(targetZ-800)]
-
-
-    //Prune trees that are behind camera Z
-    trees = trees.filter( tree => tree.z - 50 < cam.location.z )
-    blobs = blobs.filter( blobs => blobs.z - 50 < cam.location.z )
-
+    moveCameraTarget()
+    objectAdderDeleter()
   }
-  
 
   //Add lead dissort after 16 beats
   const dissort = demoTime > 16 ? (demoTime + 0.2) % 2 / 2 : 0
+
+
+  //Draw stuff
+  background(20, 20, 40); // Sky blue
+
+  drawGround()
 
   for (const tree of trees) {
     tree.draw( dissort )
@@ -75,6 +53,36 @@ function draw() {
   for (const blob of blobs) {
     blob.draw()
   }
+}
+
+function moveCameraTarget() {
+  const lastTargetTime = cam.targetTime
+    
+  const x = ( 0.5 - Math.random() ) * 1000 
+  targetZ = targetZ - 800
+  const newTarget = createVector( x, 0, cam.target.z - 800 )
+
+  cam.setTarget(newTarget, lastTargetTime + timeToNextTarget, lastTargetTime)
+}
+
+function objectAdderDeleter() {
+    //procedurally add trees and blobs
+    trees = [ ...trees, ...spawnTrees(targetZ-800)]
+    blobs = [ ...blobs, ...spawnBlobs(targetZ-800)]
+
+    //Prune trees that are behind camera Z
+    trees = trees.filter( tree => tree.z - 50 < cam.location.z )
+    blobs = blobs.filter( blobs => blobs.z - 50 < cam.location.z )
+}
+
+function drawGround() {
+  // Ground
+  push();
+  fill(34, 139, 34); // Forest green
+  translate(0, 100, targetZ);
+  rotateX(HALF_PI);
+  plane(4000, 10000);
+  pop();
 }
 
 function spawnTrees( z_origin ) {
