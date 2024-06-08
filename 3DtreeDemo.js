@@ -1,36 +1,23 @@
 audioPlayer = document.querySelector('#song')
 
-let trees = [];
+let trees = []
 
 let speed = 2;
 let angle = 0;
 let radius = 500;
 let cam
 
-let targetIndex = 0
-let targets = [] //A list of vectors where camera is heading
+let targetZ = 0
+
+const treeSpawnAmount = 30
 
 function setup() {
   createCanvas(windowWidth, windowHeight, WEBGL);
-  for (let i = 0; i < 100; i++) {
-    let x = random(-2000, 2000);
-    let z = random(-2000, 2000);
-    trees.push(new Tree( x, 0, z))
-  }
 
-  //CahtGPT generated code to create ziggsagg pattern
-  let step = 200;
-  let length = 800;
-  let numZigzags = 6;
-
-  for (let i = 0; i <= numZigzags; i++) {
-    let x = (i % 2 === 0) ? 0 : step;
-    let z = (i * (length / numZigzags));
-    targets.push(createVector(x, 0, z));
-  }
+  trees = [ ...spawnTrees(targetZ), ...spawnTrees(targetZ - 800) ]
 
   cam = new Camera()
-  cam.setTarget(targets[targetIndex], 4, 0)
+  cam.setTarget( createVector(0, 0, targetZ), 8, 0)
 
   noLoop()
 }
@@ -45,29 +32,48 @@ function draw() {
   // Ground
   push();
   fill(34, 139, 34); // Forest green
-  translate(0, 100, 0);
+  translate(0, 100, targetZ);
   rotateX(HALF_PI);
   plane(4000, 10000);
   pop();
 
   cam.linearAdvance(demoTime)
 
+  //Every time the camera meets target, move target and spawn trees
   if ( cam.atTarget ) {
     const lastTargetTime = cam.targetTime
-    targetIndex++
-    targetIndex = targetIndex % targets.length
-    cam.setTarget(targets[targetIndex], lastTargetTime + 4, lastTargetTime)
+    
+    const x = ( 0.5 - Math.random() ) * 1000 
+    targetZ = targetZ - 800
+    const newTarget = createVector( x, 0, cam.target.z - 800 )
 
-    console.log(getTime())
-    console.log(demoTime)
+    // 4 beats to next target untill 16 beats, 2 after that
+    const timeToNextTarget = demoTime > 16 ? 2 : 4;
+
+    cam.setTarget(newTarget, lastTargetTime + timeToNextTarget, lastTargetTime)
+
+    //procedurally add trees
+    trees = [ ...trees, ...spawnTrees(targetZ-800)]
+
+    //Prune trees that are behind camera Z
+    trees = trees.filter( tree => tree.z - 50 <   cam.location.z )
   }
   
 
   //Add lead dissort after 16 beats
   const dissort = demoTime > 16 ? (demoTime + 0.2) % 2 / 2 : 0
 
-
   for (const tree of trees) {
     tree.draw( dissort )
   }
+}
+
+function spawnTrees( z_origin ) {
+  let trees = []
+  for (let i = 0; i < treeSpawnAmount; i++) {
+    let x = random(-2000, 2000);
+    let z = z_origin - random(0, 1600);
+    trees.push(new Tree( x, 0, z))
+  }
+  return trees
 }
