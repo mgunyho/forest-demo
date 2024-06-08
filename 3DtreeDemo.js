@@ -7,9 +7,12 @@ let cam
 let targetZ = 0
 let timeToNextTarget = 4
 
-const treeSpawnAmount = 10
 let sinTime = 0
 let deltaTime = 0
+
+let introFont
+
+const treeSpawnAmount = 30
 
 function setup() {
   createCanvas(windowWidth, windowHeight, WEBGL);
@@ -19,7 +22,9 @@ function setup() {
   blobs = [ ...spawnBlobs(targetZ), ...spawnBlobs(targetZ - 800) ]
 
   cam = new Camera()
-  cam.setTarget( createVector(0, 0, targetZ), 8, 0)
+  cam.setTarget( createVector(0, 0, targetZ), 16, 0)
+
+  introFont = loadFont('./lib/bloodcrow.ttf');
 
   noStroke();
   noLoop()
@@ -33,8 +38,12 @@ function draw() {
   const bpm = 138
   const demoTime = getTime() * bpm / 60 + 0.25
 
-  //perspective(1.5)
-  cam.linearAdvance(demoTime)
+  let yOffset = 0
+  if (demoTime > 8 && demoTime < 32) {
+    yOffset = sin(demoTime*2) * -30
+  }
+
+   cam.linearAdvance(demoTime, yOffset)
 
   //Every time the camera meets target, move target and spawn trees
   if ( cam.atTarget ) {
@@ -65,6 +74,8 @@ function draw() {
   //Draw stuff
   background(20, 20, 40); // Sky blue
 
+  drawIntroText()
+
   drawGround()
 
   for (const tree of trees) {
@@ -93,6 +104,18 @@ function objectAdderDeleter() {
     //Prune trees that are behind camera Z
     trees = trees.filter( tree => tree.z - 50 < cam.location.z )
     blobs = blobs.filter( blobs => blobs.z - 50 < cam.location.z )
+}
+
+function drawIntroText() {
+  push();
+  textFont(introFont);
+  translate(0, -200, 600); // Position the text 200 units above the origin
+  rotateX(-HALF_PI); // Correcting the rotation to be flat on the XZ plane without mirroring
+  fill(255, 255, 255);
+  textSize(32);
+  textAlign(CENTER, CENTER);
+  text('Forrest Friends', 0, 0);
+  pop();
 }
 
 function drawGround() {
