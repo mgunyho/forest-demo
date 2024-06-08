@@ -39,8 +39,10 @@ function draw() {
   }
 
   //Add lead dissort after 16 beats
-  const dissort = demoTime > 16 ? (demoTime + 0.2) % 2 / 2 : 0
-
+  let dissort = 0
+  if (demoTime > 16) {
+    dissort = (demoTime + 0.2) % 2 / 2
+  }
 
   //Draw stuff
   background(20, 20, 40); // Sky blue
