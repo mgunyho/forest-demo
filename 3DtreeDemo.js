@@ -33,7 +33,7 @@ function setup() {
 
 function draw() {
   const bpm = 138
-  const demoTime = getTime() * bpm / 60
+  const demoTime = getTime() * bpm / 60 + 0.25
 
   background(20, 20, 40); // Sky blue
   noStroke();
@@ -53,9 +53,17 @@ function draw() {
     targetIndex++
     targetIndex = targetIndex % targets.length
     cam.setTarget(targets[targetIndex], lastTargetTime + 4, lastTargetTime)
+
+    console.log(getTime())
+    console.log(demoTime)
   }
   
+
+  //Add lead dissort after 16 beats
+  const dissort = demoTime > 16 ? (demoTime + 0.2) % 2 / 2 : 0
+
+
   for (const tree of trees) {
-    tree.draw()
+    tree.draw( dissort )
   }
 }
