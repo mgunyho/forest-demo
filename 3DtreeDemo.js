@@ -1,20 +1,40 @@
+audioPlayer = document.querySelector('#song')
 
 let trees = [];
 
 let speed = 2;
 let angle = 0;
 let radius = 500;
+let cam
+
+let targetIndex = 0
+let targets
 
 function setup() {
   createCanvas(windowWidth, windowHeight, WEBGL);
   for (let i = 0; i < 100; i++) {
     let x = random(-2000, 2000);
-    let z = random(-5000, 0);
+    let z = random(-2000, 2000);
     trees.push(new Tree( x, 0, z))
   }
+
+  targets = [
+    createVector(0, 0, 0),
+    createVector(400, 0, 0),
+    createVector(400, 0, 800),
+    createVector(0, 0, 800),
+  ]
+
+  cam = new Camera()
+  cam.setTarget(targets[targetIndex], 4, 0)
+
+  noLoop()
 }
 
 function draw() {
+  const bpm = 138
+  const demoTime = getTime() * bpm / 60
+
   background(20, 20, 40); // Sky blue
   noStroke();
   
@@ -25,17 +45,16 @@ function draw() {
   rotateX(HALF_PI);
   plane(4000, 10000);
   pop();
+
+  cam.linearAdvance(demoTime)
+
+  if ( cam.atTarget ) {
+    const lastTargetTime = cam.targetTime
+    targetIndex++
+    targetIndex = targetIndex % targets.length
+    cam.setTarget(targets[targetIndex], lastTargetTime + 4, lastTargetTime)
+  }
   
-  // Update angle for circular motion
-  angle += speed * 0.01;
-
-  // Calculate camera position
-  let camX = radius * cos(angle);
-  let camZ = radius * sin(angle) - frameCount * speed;
-
-  // Set camera position and target
-  camera(camX, 0, camZ, 0, 0, camZ - 500, 0, 1, 0);
-
   for (const tree of trees) {
     tree.draw()
   }
