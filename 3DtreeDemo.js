@@ -14,7 +14,7 @@ let deltaTime = 0
 
 let introFont
 
-const treeSpawnAmount = 80
+const treeSpawnAmount = 30
 
 function setup() {
   createCanvas(windowWidth, windowHeight, WEBGL);
@@ -39,6 +39,11 @@ function draw() {
 
   const bpm = 138
   const demoTime = getTime() * bpm / 60 + 0.25
+
+  //if the song ends, end demo
+  if (demoTime >= 260) {
+    endDemo()
+  }
 
   //Walking
   let yOffset = 0
@@ -76,12 +81,6 @@ function draw() {
     let pers = 0.9 * (Math.sin((sinTime - 1)/1.3)) + 1.6
     //perspective(4*(Math.sin(sinTime + 1)/10) + 2.3, width/height, 10)
     perspective(pers, width/height, 10)
-
-    
-    if (pers > 3) {
-      console.log("perspective number: " + pers)
-    }
-
   }
 
   //Draw stuff
@@ -97,8 +96,16 @@ function draw() {
 
   drawGround()
 
+  let trunkhue
+  if (demoTime > 10) {
+    trunkHue = createVector(4.4*Math.sin((demoTime/5.6)+4.8), 63, 27)
+  } else {
+    trunkHue = createVector(26, 63, 27)
+  }
+  
+
   for (const tree of trees) {
-    tree.draw( dissort )
+    tree.draw(dissort, trunkHue)
   }
   for (const blob of blobs) {
     blob.draw()
