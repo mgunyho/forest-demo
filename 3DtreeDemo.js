@@ -7,11 +7,12 @@ let cam
 let targetZ = 0
 let timeToNextTarget = 4
 
-const treeSpawnAmount = 30
+const treeSpawnAmount = 10
 
 function setup() {
   createCanvas(windowWidth, windowHeight, WEBGL);
 
+  
   trees = [ ...spawnTrees(targetZ), ...spawnTrees(targetZ - 800) ]
   blobs = [ ...spawnBlobs(targetZ), ...spawnBlobs(targetZ - 800) ]
 
@@ -23,6 +24,9 @@ function setup() {
 }
 
 function draw() {
+  ambientLight(128, 100, 100);
+  directionalLight(128, 100, 100, 0, 0.5, -0.5);
+
   const bpm = 138
   const demoTime = getTime() * bpm / 60 + 0.25
 
@@ -42,6 +46,11 @@ function draw() {
   let dissort = 0
   if (demoTime > 16) {
     dissort = (demoTime + 0.2) % 2 / 2
+  }
+
+  //wonky perspective effect at 32 beats
+  if (demoTime > 32) {
+    perspective(Math.sin(demoTime % 1.5), 1.5, 100)
   }
 
   //Draw stuff
