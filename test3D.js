@@ -1,5 +1,6 @@
 
 let firstShader
+let shaderTexture
 audioPlayer = document.querySelector('#song')
 
 
@@ -15,8 +16,6 @@ function setup() {
     //use windowWidth and windowHeight later
     createCanvas(windowWidth, windowHeight, WEBGL);
 
-    prevBuffer = createFramebuffer({ format: FLOAT })
-    currbuffer = createFramebuffer({ format: FLOAT })
 }
 
 
@@ -28,10 +27,6 @@ function draw() {
     const bpm = 138
     const demoTime = getTime() * bpm / 60
 
-
-    
-    
-
     //background(20, 70, 90)
 
     const mainCamera = createCamera()
@@ -42,12 +37,14 @@ function draw() {
     } else {
         bassScene(demoTime)
     }
-    
-    
 }
 
 
 function firstScene(demoTime) {
+
+    ambientLight(128, 128, 128);
+    directionalLight(128, 100, 100, 0, 0.5, -0.5);
+
     let axis1 = createVector(0.5, 0, 0.5);
     let axis2 = createVector(0, 1, 0);
     const speed = 0.3

@@ -8,6 +8,8 @@ let targetZ = 0
 let timeToNextTarget = 4
 
 const treeSpawnAmount = 10
+let sinTime = 0
+let deltaTime = 0
 
 function setup() {
   createCanvas(windowWidth, windowHeight, WEBGL);
@@ -24,12 +26,14 @@ function setup() {
 }
 
 function draw() {
+
   ambientLight(128, 100, 100);
   directionalLight(128, 100, 100, 0, 0.5, -0.5);
 
   const bpm = 138
   const demoTime = getTime() * bpm / 60 + 0.25
 
+  //perspective(1.5)
   cam.linearAdvance(demoTime)
 
   //Every time the camera meets target, move target and spawn trees
@@ -42,15 +46,20 @@ function draw() {
     objectAdderDeleter()
   }
 
+  
   //Add lead dissort after 16 beats
   let dissort = 0
   if (demoTime > 16) {
+    
     dissort = (demoTime + 0.2) % 2 / 2
   }
 
+  const defFov = 2 * Math.atan(height / 2 / 800)
+  perspective(1, width/height, 10)
   //wonky perspective effect at 32 beats
   if (demoTime > 32) {
-    perspective(Math.sin(demoTime % 1.5), 1.5, 100)
+    sinTime = demoTime - 32
+    perspective(3*(Math.sin(sinTime)/10) + 2, width/height, 10)
   }
 
   //Draw stuff
