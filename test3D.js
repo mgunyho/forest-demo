@@ -15,6 +15,8 @@ function setup() {
     //use windowWidth and windowHeight later
     createCanvas(windowWidth, windowHeight, WEBGL);
 
+    prevBuffer = createFramebuffer({ format: FLOAT })
+    currbuffer = createFramebuffer({ format: FLOAT })
 }
 
 
@@ -23,24 +25,24 @@ function setup() {
 function draw() {
     firstShader.setUniform('u_resolution', [width, height])
 
-    shader(firstShader)
-    rect(0,0,width,height)
-
-    
     const bpm = 138
     const demoTime = getTime() * bpm / 60
+
+
+    
     
 
     //background(20, 70, 90)
 
     const mainCamera = createCamera()
-
+    
     //the bass starts at demoTime 16
     if (demoTime < 16) {
         firstScene(demoTime)
     } else {
         bassScene(demoTime)
     }
+    
     
 }
 
