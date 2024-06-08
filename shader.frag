@@ -15,13 +15,17 @@ Example:
 precision mediump float;
 #endif
 
+uniform vec2 u_resolution;
+
 void main() {
+
+    vec2 st = gl_FragCoord.xy/u_resolution.xy;
     // A blue color
     // In shaders, the RGB color spectrum goes from 0 - 1 instead of 0 - 255
     vec3 color = vec3(0.0, 0.0, 1.0);
 
     // gl_FragColor is a built in shader variable, and you .frag file must contain it
     // We are setting the vec3 color into a new vec4, with an transparency of 1 (no opacity)
-    gl_FragColor = vec4(color, 1.0);
+    gl_FragColor = vec4(0, st.x, st.y, 1.0);
 }
 
