@@ -1,6 +1,7 @@
 
-
 let firstShader
+audioPlayer = document.querySelector('#song')
+
 
 
 audioPlayer = document.querySelector('#song')
@@ -25,7 +26,7 @@ function draw() {
     shader(firstShader)
     rect(0,0,width,height)
 
-    /*
+    
     const bpm = 138
     const demoTime = getTime() * bpm / 60
     
@@ -34,14 +35,13 @@ function draw() {
 
     const mainCamera = createCamera()
 
-    
     //the bass starts at demoTime 16
     if (demoTime < 16) {
         firstScene(demoTime)
     } else {
         bassScene(demoTime)
     }
-    */
+    
 }
 
 

@@ -28,4 +28,3 @@ void main() {
     // We are setting the vec3 color into a new vec4, with an transparency of 1 (no opacity)
     gl_FragColor = vec4(0, st.x, st.y, 1.0);
 }
-
