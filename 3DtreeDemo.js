@@ -58,9 +58,9 @@ function draw() {
     if (  demoTime > 16 ) {
       timeToNextTarget = 2
     }
-    if ( demoTime > 52 ) {
+    if ( demoTime > 160) {
       timeToNextTarget = 32
-      endTarget = createVector( 0, 0, cam.target.z - 6400 )
+      endTarget = createVector( 0, 0, cam.target.z - 6400)
     }
 
     moveCameraTarget()
@@ -96,9 +96,17 @@ function draw() {
 
   drawGround()
 
+  //cahnge trunk colour 
   let trunkhue
-  if (demoTime > 10) {
-    trunkHue = createVector(4.4*Math.sin((demoTime/5.6)+4.8), 63, 27)
+  if (demoTime > 64) {
+    tColor = 20*Math.sin((demoTime/5.6))+20
+    trunkHue = createVector(100*Math.sin((demoTime/5.6))+120, 63, 27)
+    if (tColor < 0) {
+      console.log("trunk hue is " + tColor)
+    } else if (tColor >350) {
+      console.log("trunk hue is " + tColor)
+    }
+
   } else {
     trunkHue = createVector(26, 63, 27)
   }
