@@ -11,10 +11,11 @@ let endTarget
 
 let sinTime = 0
 let deltaTime = 0
+let treeYoffset = 0
 
 let introFont
 
-const treeSpawnAmount = 30
+const treeSpawnAmount = 10
 
 function setup() {
   createCanvas(windowWidth, windowHeight, WEBGL);
@@ -38,10 +39,10 @@ function draw() {
   directionalLight(128, 100, 100, 0, 0.5, -0.5);
 
   const bpm = 138
-  const demoTime = getTime() * bpm / 60 + 0.25
+  const demoTime = getTime() * bpm / 60 + 0.25 
 
   //if the song ends, end demo
-  if (demoTime >= 260) {
+  if (demoTime >= 170) {
     endDemo()
   }
 
@@ -55,12 +56,17 @@ function draw() {
 
   //Every time the camera meets target, move target and spawn trees
   if ( cam.atTarget && !endTarget ) {
-    if (  demoTime > 16 ) {
+    if (  demoTime > 16) {
       timeToNextTarget = 2
+    } else if (demoTime > 64) {
+      timeToNextTarget = 4
     }
-    if ( demoTime > 160) {
-      timeToNextTarget = 32
+    if ( demoTime > 140) {
+      timeToNextTarget = 40
       endTarget = createVector( 0, 0, cam.target.z - 6400)
+      //ending
+      spotLight(255, 0, 0, endTarget.x, endTarget.y + 2, endTarget.z, 1, 0, 0)
+
     }
 
     moveCameraTarget()
@@ -78,7 +84,7 @@ function draw() {
   //wonky perspective effect at 32 beats
   if (demoTime > 32 && demoTime < 52 ) {
     sinTime = demoTime - 32
-    let pers = 0.9 * (Math.sin((sinTime - 1)/1.3)) + 1.6
+    let pers = 0.7 * (Math.sin((sinTime - 1)/1.3)) + 1.6
     //perspective(4*(Math.sin(sinTime + 1)/10) + 2.3, width/height, 10)
     perspective(pers, width/height, 10)
   }
@@ -98,7 +104,7 @@ function draw() {
 
   //cahnge trunk colour 
   let trunkhue
-  if (demoTime > 64) {
+  if (demoTime > 60) {
     tColor = 20*Math.sin((demoTime/5.6))+20
     trunkHue = createVector(100*Math.sin((demoTime/5.6))+120, 63, 27)
     if (tColor < 0) {
@@ -110,7 +116,16 @@ function draw() {
   } else {
     trunkHue = createVector(26, 63, 27)
   }
+
+  if (demoTime > 90 && demoTime < 120) {
+    console.log(demoTime)
+    treeYoffset -= (demoTime - 90) * 0.5
+  } 
   
+  if (demoTime > 110 && treeYoffset < 1) {
+    treeYoffset += (demoTime - 90) * 0.5
+    console.log(demoTime)
+  }
 
   for (const tree of trees) {
     tree.draw(dissort, trunkHue)
@@ -163,7 +178,7 @@ function drawIntroText() {
   fill(255, 255, 255);
   textSize(32);
   textAlign(CENTER, CENTER);
-  text('Forrest Friends', 0, 0);
+  text('Forest for the Trees', 0, 0);
   pop();
 }
 
@@ -182,7 +197,7 @@ function spawnTrees( z_origin ) {
   for (let i = 0; i < treeSpawnAmount; i++) {
     let x = random(-2000, 2000);
     let z = z_origin - random(0, 1600);
-    trees.push(new Tree( x, 0, z))
+    trees.push(new Tree( x, treeYoffset, z))
   }
   return trees
 }
