@@ -42,7 +42,10 @@ function draw() {
   const demoTime = getTime() * bpm / 60 + 0.25 
 
   //if the song ends, end demo
-  if (demoTime >= 170) {
+  if (demoTime >= 160) {
+      drawCredits()
+      return
+  } else if (demoTime >= 170) {
     endDemo()
   }
 
@@ -210,4 +213,41 @@ function spawnBlobs( z_origin ) {
     blobs.push(new GroundBlob( x, 0, z))
   }
   return blobs
+}
+
+function drawCredits() {
+  //cam.setTarget( createVector(0, 0, 10), 0, 0);
+  //camera(0, 0, 800, 0, 0, 0);
+  camera();
+  push();
+  textFont(introFont);
+  background(20, 20, 40); // Sky blue
+
+  textSize(52);
+  textAlign(CENTER, CENTER);
+  fill("white");
+  translate(0, -100, -100);
+  text("Forest for the trees", 0, 0);
+
+  textSize(32);
+  translate(0, 100, 0);
+  text("Camera - Leeviathan", 0, 0);
+  translate(0, 50, 0);
+  text("Special effects - Geru", 0, 0);
+  translate(0, 50, 0);
+  text("Music - mart_on/mart_off", 0, 0);
+
+  translate(0, 80, 0);
+  textSize(23);
+  const y = 20;
+  text("Sound effects CC BY 4.0", 0, 0)
+  translate(0, 2 * y, 0);
+  textSize(18);
+  text("https://freesound.org/people/dobroide/sounds/22384/", 0, 0);
+  translate(0, y, 0);
+  text("https://freesound.org/people/dobroide/sounds/36562/", 0, 0);
+  translate(0, y, 0);
+  text("https://freesound.org/people/dobroide/sounds/20577/", 0, 0);
+
+  pop();
 }
