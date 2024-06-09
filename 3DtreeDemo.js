@@ -15,7 +15,7 @@ let treeYoffset = 0
 
 let introFont
 
-const treeSpawnAmount = 10
+const treeSpawnAmount = 20
 
 function setup() {
   createCanvas(windowWidth, windowHeight, WEBGL);
@@ -188,7 +188,8 @@ function drawIntroText() {
 function drawGround() {
   // Ground
   push();
-  fill(34, 139, 34); // Forest green
+  colorMode(HSL)
+  fill(130, 70, 40); // Forest green
   translate(0, 100, targetZ);
   rotateX(HALF_PI);
   plane(4000, 10000);
@@ -207,7 +208,7 @@ function spawnTrees( z_origin ) {
 
 function spawnBlobs( z_origin ) {
   let blobs = []
-  for (let i = 0; i < treeSpawnAmount; i++) {
+  for (let i = 0; i < treeSpawnAmount * 4 ; i++) {
     let x = random(-2000, 2000);
     let z = z_origin - random(0, 1600);
     blobs.push(new GroundBlob( x, 0, z))
